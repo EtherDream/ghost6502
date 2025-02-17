@@ -1,0 +1,28 @@
+{
+  "name": "ghost6502",
+  "version": "0.0.1",
+  "description": "A JavaScript 6502 emulator driven by built-in functions",
+  "main": "dist/ghost6502.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "test": "node dist/test.js"
+  },
+  "type": "module",
+  "keywords": ["js obfuscation", "web security", "native code", "mos6502"],
+  "author": "EtherDream",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EtherDream/ghost6502"
+  },
+  "files": [
+    "dist/ghost6502.js",
+    "dist/ghost6502.js.map",
+    "index.d.ts"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
