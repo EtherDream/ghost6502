@@ -130,7 +130,7 @@ ghost6502.reg.pc.fill(ENTRY_ADDR)
 ghost6502.run()
 ```
 
-For simplicity and efficiency, this VM does not simulate cycles, but uses loops instead. Each loop executes one instruction.
+For simplicity and efficiency, this VM does not simulate clock cycles, but uses interpreter loops instead. Each loop executes one instruction.
 
 The run function executes *loop* instructions and stops when it encounters a BRK (0x00), RTI or illegal instruction. The reset, irq and nmi functions also call the run function internally.
 
@@ -168,11 +168,11 @@ Note that this package does not include the opcode enum file. You can get it fro
 
 This page does not provide compilation capabilities, it only extracts hex codes from the textarea. You can generate assembly hex codes through [virtual 6502](https://www.masswerk.at/6502/assembler.html).
 
-[snake.asm](dist/demos/snake.asm)
+[snake.asm](https://github.com/EtherDream/ghost6502/blob/gh-pages/demos/snake.asm)
 
 ![snake](docs/snake.webp)
 
-[paint.asm](dist/demos/paint.asm)
+[paint.asm](https://github.com/EtherDream/ghost6502/blob/gh-pages/demos/paint.asm)
 
 ![snake](docs/paint.webp)
 
