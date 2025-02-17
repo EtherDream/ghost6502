@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Demo2</title>
+<script type="module">
+  import OP from './opcode.js'
+  import ghost6502 from './ghost6502.js'
+
+  const inputP = prompt.bind(window, 'Enter the value P', 10)
+  const inputQ = prompt.bind(window, 'Enter the value Q', 20)
+  const output = alert.bind(window, ghost6502.bus.data)
+
+  ghost6502.bus.mapRead(253, inputP)
+  ghost6502.bus.mapRead(254, inputQ)
+  ghost6502.bus.mapWrite(255, output)
+
+  ghost6502.mem.set([
+    OP.LDA_ZPG, 253,    // A = inputP()
+    OP.LDX_ZPG, 254,    // X = inputQ()
+    OP.STX_ZPG, 100,    // mem[100] = X
+    OP.ADC_ZPG, 100,    // A += mem[100]
+    OP.STA_ZPG, 255,    // output(A)
+  ])
+
+  debugger
+  ghost6502.reset()
+</script>
+</head>
+<body>
+</body>
+</html>

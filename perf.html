@@ -1,0 +1,14 @@
+<script type="module">
+  import OP from './opcode.js'
+  import ghost6502 from './ghost6502.js'
+
+  ghost6502.mem.set([OP.JMP_ABS, 0x00, 0x00])
+  ghost6502.setLoop(1e6)
+
+  const t0 = performance.now()
+  ghost6502.run()
+  const t1 = performance.now()
+
+  const ips = (1e6 / (t1 - t0) * 1000) | 0
+  console.log('Speed:', ips.toLocaleString() + ' IPS')
+</script>

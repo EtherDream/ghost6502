@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Demo3</title>
+<script type="module">
+  import OP from './opcode.js'
+  import ghost6502 from './ghost6502.js'
+
+  const obj = document.body
+  const key = 'textContent'
+  const val = {
+    toString: ''.concat.bind('count: ', ghost6502.bus.data)
+  }
+  const display = Reflect.set.bind(null, obj, key, val)
+  ghost6502.bus.mapWrite(255, display)
+
+
+  const PROGRAM_ADDRESS = 0x8000
+  const RESET_ADDRESS = 0xFFFC
+  const IRQ_ADDRESS = 0xFFFE
+
+  const program = [
+    /* $8000 */ OP.LDX_IMM, 60,     // X = 60
+    /* $8002 */ OP.STX_ZPG, 255,    // display(X)
+    /* $8004 */ OP.BRK,             // exit reset
+
+    /* $8005 */ OP.INX,             // X++
+    /* $8006 */ OP.STX_ZPG, 255,    // display(X)
+    /* $8008 */ OP.RTI,             // exit interrupt
+  ]
+  ghost6502.mem.set(program, PROGRAM_ADDRESS)
+  ghost6502.mem.set([0x00, 0x80], RESET_ADDRESS)
+  ghost6502.mem.set([0x05, 0x80], IRQ_ADDRESS)
+
+  ghost6502.reset()
+  setInterval(ghost6502.irq, 1000)
+</script>
+</head>
+<body>
+</body>
+</html>
