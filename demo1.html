@@ -7,7 +7,6 @@
   import OP from './opcode.js'
   import ghost6502 from './ghost6502.js'
 
-  // calculate the sum from 1 to 10
   ghost6502.mem.set([
     OP.LDA_IMM, 0,    // A = 0
     OP.LDX_IMM, 1,    // X = 1
@@ -21,7 +20,7 @@
   debugger
   ghost6502.reset()   // 👈🏻 Can you step into this function?
 
-  alert(ghost6502.reg.a)
+  alert('sum(1, 10) = ' + ghost6502.reg.a)
 </script>
 </head>
 <body>
