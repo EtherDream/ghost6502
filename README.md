@@ -1,13 +1,13 @@
 # Ghost6502
 
-A JavaScript 6502 emulator driven by built-in functions.
+A JavaScript 6502 simulator driven by built-in functions.
 
 This project is an experiment in the article "JS Obfuscation: Mining Built-in Functions and Crafting Non-debuggable VMs".
 
 
 ## Demo1
 
-This demo calculates the sum from 1 to 10:
+This demo calculates the sum of numbers from 1 to 10:
 
 ```javascript
 import OP from './opcode.js'
@@ -26,7 +26,7 @@ ghost6502.mem.set([
 debugger
 ghost6502.reset()   // 👈🏻 Can you step into this function?
 
-alert(ghost6502.reg.a)
+alert('sum(1, 10) = ' + ghost6502.reg.a)
 ```
 
 [http://etherdream.github.io/ghost6502/demo1.html](http://etherdream.github.io/ghost6502/demo1.html)
@@ -38,7 +38,7 @@ In fact, this function performs a lot of operations, but there is no source code
 
 ## Demo2
 
-This demo reads `P` and `Q` through the input box, calculates their sum, and outputs it through the message box:
+This demo reads `P` and `Q` through the input box, calculates their sum, and outputs it via the message box:
 
 ```javascript
 import OP from './opcode.js'
@@ -111,14 +111,14 @@ setInterval(ghost6502.irq, 1000)
 
 ![demo3](docs/demo3.webp)
 
-Even if "Timer" in "Event Listener Breakpoints" is checked, the irq function still cannot be paused by the debugger.
+Even when the "Timer" option in "Event Listener Breakpoints" is checked, the irq function still cannot be paused by the debugger.
 
 
 ## API
 
-The above Demo3 is configured with a reset vector so that the program can be run from the specified address; while Demo1 and Demo2 are not configured, so 0x0000 is used as the default entry address.
+The above Demo3 is configured with a reset vector so that the program can be run from the specified address, whereas Demo1 and Demo2 are not configured, so 0x0000 is used as the default entry address.
 
-If you do not want to set the entry address through the reset vector, you can manually initialize the PC register and start the program through the `run` function:
+If you do not want to set the entry address via the reset vector, you can manually initialize the PC register and start the program using the `run` function:
 
 ```javascript
 const ENTRY_ADDR = 0x8000
@@ -132,9 +132,9 @@ ghost6502.run()
 
 For simplicity and efficiency, this VM does not simulate clock cycles, but uses interpreter loops instead. Each loop executes one instruction.
 
-The run function executes *loop* instructions and stops when it encounters a BRK (0x00), RTI or illegal instruction. The reset, irq and nmi functions also call the run function internally.
+The run function executes `loop` number of instructions and stops when it encounters BRK (0x00), RTI or an illegal instruction. Additionally, the reset, irq and nmi functions also call the run function internally.
 
-The default value of *loop* is 2³² - 1, so each run() can execute enough instructions. You can modify *loop* through the `setLoop` function to customize the time slice:
+The default value of loop is 2³² - 1, so each call to run can execute enough instructions. You can modify it through the `setLoop` function to customize the time slice:
 
 ```javascript
 // each run() executes at most 10k instructions
@@ -149,7 +149,7 @@ function onTimeSlice() {
 onTimeSlice()
 ```
 
-This allows a time-consuming task to be split into multiple executions, so that the main thread will not be blocked for a long time; and this is transparent to the program without changing it.
+This allows a time-consuming task to be split into multiple executions, so that the main thread will not be blocked for a long time, and this is transparent to the program without changing it.
 
 Furthermore, you can use the `runOp` function to execute a single instruction, which allows for more flexible scheduling. See [index.d.ts](index.d.ts) for details.
 
@@ -184,7 +184,7 @@ In addition to the CPU interpreter, keyboard reading, canvas rendering, and regi
 |    Mouse X   |  Input |       0xFC       | [0, 32)                    |
 |    Mouse Y   |  Input |       0xFD       | [0, 32)                    |
 |    Random    |  Input |       0xFE       | [0, 256)                   |
-|   Last Key   |  Input |       0xFF       | ASCII code; 0 if keyup     |
+|   Last Key   |  Input |       0xFF       | ASCII code, 0 if keyup     |
 |    Screen    | Output | [0x0200, 0x0600) | 32x32 (1 byte/pixel)       |
 
 
@@ -209,9 +209,9 @@ console.log('Speed:', ips.toLocaleString() + ' IPS')
 
 [http://etherdream.github.io/ghost6502/perf.html](http://etherdream.github.io/ghost6502/perf.html)
 
-It can reach 1.7 MIPS on my MBP M1 CPU. Due to the underlying operations of each instruction are different, there may be some variations in actual use.
+It can reach 1.7 MIPS on my MBP M1 CPU. Due to the differing underlying operations of each instruction, there may be some variations in actual use.
 
-Although the performance is poor, it is still several times faster than the original 6502 from decades ago, which ran at 1-3MHz and only had a few hundred kIPS.
+Although the performance is significantly worse than normal JavaScript, it is still several times faster than the original 6502 from decades ago, which ran at 1-3 MHz and only achieved a few hundred kIPS.
 
 
 ## Unsupported features

@@ -5,7 +5,7 @@ declare namespace ghost6502 {
    * @description Fetch an opcode from the address pointed to by
    *              reg.pc and execute it.
    *
-   * @returns     true if it's a BRK, RTI or illegal instruction.
+   * @returns     true if it's BRK, RTI or an illegal instruction.
    */
   function runOp() : boolean
 
@@ -15,7 +15,7 @@ declare namespace ghost6502 {
    * @description Call runOp `loop` times until it returns true.
    *
    * @returns     -1 if runOp returns true;
-   *              ≥0 otherwise. (executed instructions number - 1)
+   *              ≥0 otherwise. (executed_instructions_number - 1)
    */
   function run() : number
 
@@ -32,28 +32,28 @@ declare namespace ghost6502 {
   /**
    * Restart the CPU.
    *
-   * @description 1. reset reg.*;
-   *              2. load the address at 0xFFFC-0xFFFD to reg.pc;
-   *              3. call the `run` function.
+   * @description 1. Reset reg.*;
+   *              2. Load the address at 0xFFFC-0xFFFD into reg.pc;
+   *              3. Call the `run` function.
    */
   function reset() : void
 
   /**
    * Call a non-maskable interrupt.
    *
-   * @description 1. push the context (reg.pc and reg.sr);
-   *              2. load the address at 0xFFFA-0xFFFB to reg.pc;
-   *              3. call the `run` function.
+   * @description 1. Push the context (reg.pc and reg.sr);
+   *              2. Load the address at 0xFFFA-0xFFFB into reg.pc;
+   *              3. Call the `run` function.
    */
   function nmi() : void
 
   /**
    * Call a maskable interrupt.
    *
-   * @description 1. exit if the I(nterrupt) flag is set;
-   *              2. push the context (reg.pc and reg.sr);
-   *              3. load the address at 0xFFFE-0xFFFF to reg.pc;
-   *              4. call the `run` function.
+   * @description 1. Exit if the I(nterrupt) flag is set;
+   *              2. Push the context (reg.pc and reg.sr);
+   *              3. Load the address at 0xFFFE-0xFFFF into reg.pc;
+   *              4. Call the `run` function.
    */
   function irq() : void
 
@@ -74,28 +74,28 @@ declare namespace ghost6502 {
     const data: Uint8Array
 
     /**
-     * Define the write behavior of the specified address.
+     * Define the write behavior for the specified address.
      *
      * (The written value is in bus.data)
      */
     function mapWrite(addr: number, callback: () => void) : void
 
     /**
-     * Restore the write behavior of the specified address.
+     * Restore the write behavior for the specified address.
      *
      * (Write to `mem` by default)
      */    
     function unmapWrite(addr: number) : void
 
     /**
-     * Define the read behavior of the specified address.
+     * Define the read behavior for the specified address.
      *
      * (The callback returns the addressed data)
      */
     function mapRead(addr: number, callback: () => number) : void
 
     /**
-     * Restore the read behavior of the specified address.
+     * Restore the read behavior for the specified address.
      *
      * (Read from `mem` by default)
      */
