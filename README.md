@@ -1,6 +1,6 @@
 # Ghost6502
 
-A JavaScript 6502 simulator driven by built-in functions.
+A MOS 6502 simulator implemented by JS built-in functions, which can be used for anti-debugging.
 
 This project is an experiment in the article "JS Obfuscation: Mining Built-in Functions and Crafting Non-debuggable VMs".
 
@@ -166,17 +166,50 @@ Note that this package does not include the opcode enum file. You can get it fro
 
 [http://etherdream.github.io/ghost6502/](http://etherdream.github.io/ghost6502/)
 
-This page does not provide compilation capabilities, it only extracts hex codes from the textarea. You can generate assembly hex codes through [virtual 6502](https://www.masswerk.at/6502/assembler.html).
-
-[snake.asm](https://github.com/EtherDream/ghost6502/blob/gh-pages/demos/snake.asm)
+The default program is a snake game (WASD keys for directions):
 
 ![snake](docs/snake.webp)
 
-[paint.asm](https://github.com/EtherDream/ghost6502/blob/gh-pages/demos/paint.asm)
+source code: [snake.asm](https://github.com/EtherDream/ghost6502/blob/gh-pages/demos/snake.asm)
 
-![snake](docs/paint.webp)
+> In addition to the CPU interpreter, keyboard reading, canvas rendering, and register bar updating are also driven by built-in functions, so none of them can be debugged!
 
-In addition to the CPU interpreter, keyboard reading, canvas rendering, and register bar updating are also driven by built-in functions, so none of them can be debugged!
+The second program is for drawing. Press the left button to draw a point, the right button to erase a point, and the 0~9 keys to switch colors:
+
+![paint](docs/paint.webp)
+
+source code: [paint.asm](https://github.com/EtherDream/ghost6502/blob/gh-pages/demos/paint.asm)
+
+Note that this page does not provide compilation capabilities, it only extracts hex codes from the textarea. You can generate hex codes through [virtual 6502](https://www.masswerk.at/6502/assembler.html). For example:
+
+```asm
+.ORG $FF00
+  LDX 0        ; x = 0
+  BRK          ; exit reset
+
+.ORG $FF80
+  INX          ; x++
+  STX $0200    ; draw(0, 0, x)
+  RTI          ; exit interrupt
+
+.ORG $FFFC
+  .WORD $FF00  ; RESET
+  .WORD $FF80  ; IRQ (60FPS)
+```
+
+Copy the above code into "src" and click the "Assembly" button, then copy the data of "object code" into our page:
+
+```text
+FF80: A6 00 00 00 00 00 00 00
+FF90: E8 8E 00 02 40 00 00 00
+FFF8: 00 00 00 00 80 FF 90 FF
+```
+
+> Blank lines can be omitted.
+
+Click the "Reset" button to run this bytecode. You can see that the color of the first point will keep changing.
+
+This playground provides the following APIs through memory mapping:
 
 |      API     |  Type  |      Address     |         Description        |
 |:------------:|:------:|:----------------:|:--------------------------:|
