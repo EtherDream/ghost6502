@@ -338,6 +338,7 @@ const REG_HEXDUMP = /^([0-9a-f]{4}):\s*?((?: [0-9a-f]{2})+)/gim
 
 btnReset.onclick = () => {
   imgU32.fill(0)
+  ghost6502.mem.fill(0)
 
   for (const m of txtHexDump.value.matchAll(REG_HEXDUMP)) {
     const addr = parseInt(m[1], 16)
