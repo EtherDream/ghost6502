@@ -214,6 +214,37 @@ It can reach 1.7 MIPS on my MBP M1 CPU. Due to the differing underlying operatio
 Although the performance is significantly worse than normal JavaScript, it is still several times faster than the original 6502 from decades ago, which ran at 1-3 MHz and only achieved a few hundred kIPS.
 
 
+## How it works
+
+Since the source code of built-in functions is not public, the debugger can only step over them, for example:
+
+```javascript
+const set = new Set()
+const add = set.add.bind(set)
+
+const arr = [11, 22, 33, 44, 55, 66]
+const run = arr.forEach.bind(arr, add)
+
+// ƒ add() { [native code] }
+console.log(add)
+
+// ƒ forEach() { [native code] }
+console.log(run)
+
+debugger
+
+// This step will call the `add` method 6 times,
+// but the debugger cannot step into it.
+run()
+
+console.log(set)
+```
+
+By mining built-in functions as raw material and crafting components such as registers, arithmetic logic units, instruction decoders, and clock signals, we can construct a Turing-complete and non-debuggable CPU.
+
+![](docs/arch.webp)
+
+
 ## Unsupported features
 
 * Clock cycles
