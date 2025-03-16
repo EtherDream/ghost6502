@@ -275,6 +275,75 @@ console.log(set)
 
 By mining built-in functions as raw material and crafting components such as registers, arithmetic logic units, instruction decoders, and clock signals, we can construct a Turing-complete and non-debuggable CPU.
 
+<details>
+<summary>...</summary>
+
+For example, we can use an object with a `valueOf` or `toString` property as a trigger, which will invoke the property when it is converted to a number or string:
+
+```javascript
+const a = {
+  valueOf: prompt.bind(window, 'Enter the value A', 2)
+}
+const b = {
+  valueOf: prompt.bind(window, 'Enter the value B', 10)
+}
+const pow = Math.pow.bind(null, a, b)
+
+const cat = ''.concat.bind('A ** B = ', {
+  toString: pow
+})
+const run = alert.bind(window, {
+  toString: cat
+})
+
+debugger
+run()
+```
+
+This allows multiple operations to be chained together.
+
+Similarly, we can use array getters to store multiple operations and trigger them through an iterative method:
+
+```javascript
+const arr = Object.defineProperties([], [
+  { get: console.log.bind(console, 'begin') },
+  { get: alert.bind(window, '11')           },
+  { get: alert.bind(window, '22')           },
+  { get: console.log.bind(console, 'end')   },
+])
+const run = arr.includes.bind(arr, 0xDEADBEEF)
+run()
+```
+
+We can use the Atomics API to implement arithmetic and logical operations:
+
+```javascript
+const reg = Uint32Array.of(100)
+Atomics.add(reg, 0, 200)
+console.log(reg[0])   // 300 (100 + 200)
+
+Atomics.xor(reg, 0, 100)
+console.log(reg[0])   // 328 (300 ^ 100)
+```
+
+Furthermore, we can use array callbacks to implement loops:
+
+```javascript
+const loop = Array(10)
+const input = {
+  toString: prompt.bind(window, 'Enter stop to exit')
+}
+const strcmp = {
+  valueOf: ''.localeCompare.bind('stop', input)
+}
+const lut = [].at.bind([true, false], strcmp)
+loop.find(lut)
+```
+
+This allows the CPU clock signal to be simulated.
+
+</details>
+
 ![](docs/arch.webp)
 
 
